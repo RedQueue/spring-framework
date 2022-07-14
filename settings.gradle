@@ -1,38 +1,60 @@
 pluginManagement {
 	repositories {
+		// 先从本地仓库中找
+		mavenLocal()
+		// 阿里云镜像
+		maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
 		gradlePluginPortal()
 		maven { url 'https://repo.spring.io/plugins-release' }
 	}
 }
 apply from: "$rootDir/gradle/build-cache-settings.gradle"
 
-include "spring-aop"
-include "spring-aspects"
-include "spring-beans"
-include "spring-context"
-include "spring-context-indexer"
-include "spring-context-support"
-include "spring-core"
+//主要模块
+include "spring-beans" //Bean工厂与装配
+include "spring-context" //上下文，即IOC容器
+include "spring-context-indexer" //类管理组件和Classpath扫描
+include "spring-context-support" //对IOC的扩展，以及IOC子容器
+include "spring-core" //核心模块 依赖注入IOC和DI的最基本实现
+include "spring-expression" //表达式语句
+
+//切面编程
+include "spring-aop" //面向切面编程，CGLIB,JDKProxy
+include "spring-aspects" //集成AspectJ，Aop应用框架
+include "spring-instrument" //动态Class Loading模块
+
+//数据访问与集成
+include "spring-jdbc" //提供JDBC主要实现模块，用于简化JDBC操作
+include "spring-tx" //spring-jdbc事务管理
+include "spring-orm" //主要集成Hibernate,jpa,jdo等
+include "spring-oxm" //将java对象映射成xml数据或将xml映射为java对象
+include "spring-jms" //发送和接受消息
+
+//web组件
+include "spring-web" //提供了最基础的web支持，主要建立在核心容器上
+include "spring-webflux" //一个新的非阻塞函数式Reactive Web框架
+include "spring-webmvc" //实现了spring mvc的web应用
+include "spring-websocket" //主要与前端页的全双工通讯协议
+
+//报文
+include "spring-messaging" //4.0加入的模块，主要集成基础报文传送应用
+
+//测试
+include "spring-test" //测试组件
+
+//集成兼容
+include "framework-bom" //解决不同模块依赖版本不同问题
+
+//日志框架
+include "spring-jcl" //通过适配器来自动选择日志实现
+
 include "kotlin-coroutines"
 project(':kotlin-coroutines').projectDir = file('spring-core/kotlin-coroutines')
-include "spring-expression"
-include "spring-instrument"
-include "spring-jcl"
-include "spring-jdbc"
-include "spring-jms"
-include "spring-messaging"
-include "spring-orm"
-include "spring-oxm"
-include "spring-test"
-include "spring-tx"
-include "spring-web"
-include "spring-webflux"
-include "spring-webmvc"
-include "spring-websocket"
-include "framework-bom"
 include "integration-tests"
 
 rootProject.name = "spring"
 rootProject.children.each {project ->
 	project.buildFileName = "${project.name}.gradle"
 }
+include 'MyTest'
+
